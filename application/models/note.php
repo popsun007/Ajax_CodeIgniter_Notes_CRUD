@@ -8,7 +8,7 @@ class Note extends CI_Model
 		$now = date("Y-m-d H:i:s");
 		$this->db->insert('notes', array(
 			'title' => $post,
-		 'description' => "", 
+		 'description' => "Enter description here...", 
 		 'created_at' => $now,
 		  'updated_at' => $now));
 		return $this->db->insert_id();

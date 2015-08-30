@@ -28,7 +28,8 @@ class Notes extends CI_Controller {
 	public function delete($id)
 	{
 		$this->note->delete($id);
-		redirect('/');
+		$notes['infos'] = $this->note->get_all();
+		echo json_encode($notes);
 	}
 	public function update($id)
 	{

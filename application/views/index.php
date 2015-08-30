@@ -11,11 +11,10 @@
         	$(document).ready(function(){
         		var Html = function ($res)
         		{
-					var html = "<div class='col-md-offset-4 col-md-4 col-md-offset-4'><h4>";
+					var html = "<div><h4>";
 					html += $res.title + "<a class='btn-danger' href='/notes/delete/" + $res.id + "'>DELETE</a></h4>";
 					html += "<form class='update' action='/notes/update/" + $res.id + "' method='post'>"
-					html += "<textarea name='descp' id='" + $res.id + "'>" + $res.description + "</textarea>";
-					html += "<input type='submit' value='update'>"
+					html += "<textarea class='description' name='descp' id='" + $res.id + "'>" + $res.description + "</textarea>";
 					html += "</form</div>";
 					return html;
 				};
@@ -26,7 +25,7 @@
 	        			$('.row').append(html);
     				}
         		}, "json");
-        		$(".add").submit(function(){
+        		$("form").on('submit', function(){
         			$.post("/notes/add_notes", $(this).serialize(),function(res){
         				var html = Html(res.infos);
         				$('.row').append(html);
@@ -34,16 +33,38 @@
         			},"json");
         			return false;
         		})
-        		$(".update").on("submit", function(){
-        			// $.post($(this).val('action'), $(this).serialize(),function(res){
-        			// 	console.log(res.note.description);
-        			// 	$($(this).textarea).html(res.note.description);
-        			// }, 'json');
+        		$(document).on('click', '.btn-danger', function(){
+        			$.post($(this).attr('href'), $(this).serialize(),function(res){
+	    				var new_html = '';
+	    				for(var i=0; i<res.infos.length; i++)
+	    				{
+	    					var html = Html(res.infos[i]);
+		        			new_html += html;
+	    				}
+	    				console.log(new_html);
+	    				$('.row').html(new_html);
+        			}, 'json');
         			return false;
+        		})
+        		$(document).on('submit','.update', function(){
+        			$.post($(this).attr('action'), $(this).serialize(),function(res){
+        				$($(this).textarea).html(res.note.description);
+        			}, 'json');
+        			return false;
+        		})
+        		$(document).on('change', 'textarea', function(){
+        			$(this).parent().submit();
+        			$(this).focus();
         		})
 
         	})
         </script>
+        <style>
+        	.row
+        	{
+        		margin-left: 50px;
+        	}
+        </style>
     </head>
     <body>
         <div class="container">
